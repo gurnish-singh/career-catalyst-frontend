@@ -1,0 +1,195 @@
+import type { Project, Skill, LearningPath, CareerGoal, Application } from "@/types/career"
+
+export const mockProjects: Project[] = [
+  {
+    id: "1",
+    title: "Senior Frontend Developer",
+    description: "Lead the development of our next-generation e-commerce platform with modern React architecture.",
+    department: "Engineering",
+    requiredSkills: ["React", "TypeScript", "Next.js", "GraphQL"],
+    duration: "6 months",
+    priority: "high",
+    matchPercentage: 95,
+    status: "open",
+  },
+  {
+    id: "2",
+    title: "Tech Lead - Mobile App",
+    description: "Drive the technical vision for our mobile application serving 1M+ users.",
+    department: "Product",
+    requiredSkills: ["Leadership", "React Native", "System Design", "Mentoring"],
+    duration: "12 months",
+    priority: "high",
+    matchPercentage: 78,
+    status: "open",
+  },
+  {
+    id: "3",
+    title: "Full Stack Developer - AI Platform",
+    description: "Build and maintain our AI-powered talent matching platform.",
+    department: "Engineering",
+    requiredSkills: ["Python", "React", "Machine Learning", "PostgreSQL"],
+    duration: "9 months",
+    priority: "medium",
+    matchPercentage: 65,
+    status: "open",
+  },
+  {
+    id: "4",
+    title: "DevOps Engineer - Cloud Migration",
+    description: "Lead the migration of our infrastructure to cloud-native solutions.",
+    department: "Infrastructure",
+    requiredSkills: ["AWS", "Kubernetes", "Docker", "Terraform"],
+    duration: "4 months",
+    priority: "high",
+    matchPercentage: 45,
+    status: "open",
+  },
+]
+
+export const mockSkills: Skill[] = [
+  { id: "1", name: "React", category: "Frontend", level: "advanced", inDemand: true, marketValue: 85 },
+  { id: "2", name: "TypeScript", category: "Programming", level: "advanced", inDemand: true, marketValue: 90 },
+  { id: "3", name: "Node.js", category: "Backend", level: "intermediate", inDemand: true, marketValue: 80 },
+  { id: "4", name: "Python", category: "Programming", level: "intermediate", inDemand: true, marketValue: 88 },
+  { id: "5", name: "System Design", category: "Architecture", level: "beginner", inDemand: true, marketValue: 95 },
+  { id: "6", name: "Leadership", category: "Soft Skills", level: "beginner", inDemand: true, marketValue: 92 },
+  { id: "7", name: "Machine Learning", category: "AI/ML", level: "beginner", inDemand: true, marketValue: 98 },
+  { id: "8", name: "AWS", category: "Cloud", level: "beginner", inDemand: true, marketValue: 85 },
+]
+
+export const mockLearningPaths: LearningPath[] = [
+  {
+    id: "1",
+    title: "System Design Mastery",
+    description: "Learn to design scalable systems and become a senior engineer",
+    skills: ["System Design", "Microservices", "Database Design", "Caching"],
+    estimatedDuration: "3 months",
+    difficulty: "intermediate",
+    progress: 60,
+    modules: [
+      {
+        id: "1",
+        title: "Scalability Fundamentals",
+        description: "Learn the basics of system scalability",
+        type: "video",
+        duration: "2 hours",
+        completed: true,
+      },
+      {
+        id: "2",
+        title: "Database Design Patterns",
+        description: "Master database design for scale",
+        type: "article",
+        duration: "1 hour",
+        completed: true,
+      },
+      {
+        id: "3",
+        title: "Microservices Architecture",
+        description: "Design distributed systems",
+        type: "project",
+        duration: "1 week",
+        completed: false,
+      },
+      {
+        id: "4",
+        title: "Caching Strategies",
+        description: "Implement effective caching",
+        type: "exercise",
+        duration: "3 hours",
+        completed: false,
+      },
+    ],
+  },
+  {
+    id: "2",
+    title: "Leadership Excellence",
+    description: "Develop the leadership skills needed for senior roles",
+    skills: ["Leadership", "Communication", "Team Management", "Strategic Thinking"],
+    estimatedDuration: "4 months",
+    difficulty: "intermediate",
+    progress: 30,
+    modules: [
+      {
+        id: "5",
+        title: "Effective Communication",
+        description: "Master technical and non-technical communication",
+        type: "video",
+        duration: "90 minutes",
+        completed: true,
+      },
+      {
+        id: "6",
+        title: "Team Dynamics",
+        description: "Understanding team psychology",
+        type: "article",
+        duration: "45 minutes",
+        completed: false,
+      },
+      {
+        id: "7",
+        title: "Strategic Planning",
+        description: "Learn to think strategically",
+        type: "project",
+        duration: "2 weeks",
+        completed: false,
+      },
+    ],
+  },
+]
+
+export const mockCareerGoals: CareerGoal[] = [
+  {
+    id: "1",
+    title: "Become a Tech Lead",
+    targetRole: "Technical Lead",
+    targetDepartment: "Engineering",
+    timeline: "12 months",
+    requiredSkills: ["System Design", "Leadership", "Mentoring", "Architecture"],
+    progress: 45,
+    milestones: [
+      {
+        id: "1",
+        title: "Complete System Design Course",
+        description: "Master system design fundamentals",
+        completed: true,
+        dueDate: new Date("2024-02-15"),
+      },
+      {
+        id: "2",
+        title: "Lead a Small Project",
+        description: "Successfully lead a 3-person team",
+        completed: false,
+        dueDate: new Date("2024-04-01"),
+      },
+      {
+        id: "3",
+        title: "Mentor Junior Developer",
+        description: "Mentor at least one junior developer",
+        completed: false,
+        dueDate: new Date("2024-06-01"),
+      },
+    ],
+  },
+]
+
+export const mockApplications: Application[] = [
+  {
+    id: "1",
+    projectId: "1",
+    projectTitle: "Senior Frontend Developer",
+    status: "submitted",
+    submittedAt: new Date("2024-01-15"),
+    aiGenerated: true,
+    coverLetter: "AI-generated cover letter highlighting React and TypeScript expertise...",
+  },
+  {
+    id: "2",
+    projectId: "2",
+    projectTitle: "Tech Lead - Mobile App",
+    status: "draft",
+    aiGenerated: true,
+    coverLetter: "Draft cover letter emphasizing leadership potential and technical skills...",
+  },
+]
