@@ -8,6 +8,7 @@ import { TalentDiscovery } from "@/components/manager/talent-discovery"
 import { ResourceOptimization } from "@/components/manager/resource-optimization"
 import { ProactiveAlerts } from "@/components/manager/proactive-alerts"
 import { Users, Search, AlertTriangle, CheckCircle } from "lucide-react"
+ import FloatingChatWidget from "@/components/chatbot/FloatingChatWidget";
 
 export function ManagerDashboard() {
   const { user } = useAuth()
@@ -76,6 +77,7 @@ export function ManagerDashboard() {
 
         <ResourceOptimization />
       </div>
+       <FloatingChatWidget />
     </DashboardLayout>
   )
 }
