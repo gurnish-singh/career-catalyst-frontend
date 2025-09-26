@@ -1,13 +1,44 @@
 "use client"
 
+import React, { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { mockResourceAlerts, mockTeamMembers } from "@/lib/manager-mock-data"
+import { mockResourceAlerts } from "@/lib/manager-mock-data"
 import { Bell, AlertTriangle, TrendingDown, TrendingUp, Users, BookOpen, X } from "lucide-react"
 
 export function ProactiveAlerts() {
+  const [teamMembers, setTeamMembers] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    async function fetchTeam() {
+      setLoading(true)
+      setError("")
+      try {
+        const res = await fetch("http://localhost:3001/manager/123/proactive-alerts")
+        const data = await res.json()
+        let insightsStr = data.proactiveInsights
+        if (typeof insightsStr === "string") {
+          insightsStr = insightsStr.replace(/```json|```/g, "").trim()
+        }
+        const insights = JSON.parse(insightsStr)
+        setTeamMembers(insights.team)
+      } catch (err) {
+        setError("Failed to fetch team data.")
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTeam()
+  }, [])
+
+  if (loading) return <div>Loading team data...</div>
+  if (error) return <div className="text-red-600">{error}</div>
+  if (!teamMembers.length) return <div>No team data available.</div>
+
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "critical":
@@ -40,8 +71,8 @@ export function ProactiveAlerts() {
     }
   }
 
-  const getAffectedEmployees = (employeeIds: string[]) => {
-    return mockTeamMembers.filter((member) => employeeIds.includes(member.id))
+  const getAffectedEmployees = (employeeNames: string[]) => {
+    return teamMembers.filter((member) => employeeNames.includes(member.name))
   }
 
   const unreadAlerts = mockResourceAlerts.filter((alert) => !alert.resolved)
@@ -102,17 +133,24 @@ export function ProactiveAlerts() {
                     <p className="text-sm font-medium mb-2">Affected Employees:</p>
                     <div className="flex gap-2">
                       {getAffectedEmployees(alert.affectedEmployees).map((employee) => (
-                        <div key={employee.id} className="flex items-center gap-2 p-2 bg-white/50 rounded-md">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={employee.avatar || "/placeholder.svg"} alt={employee.name} />
-                            <AvatarFallback className="text-xs">
-                              {employee.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <span className="text-sm">{employee.name}</span>
+                        <div key={employee.id} className="flex flex-col gap-1 p-2 bg-white/50 rounded-md">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-6 w-6">
+                              <AvatarImage src={employee.avatar || "/placeholder.svg"} alt={employee.name} />
+                              <AvatarFallback className="text-xs">
+                                {employee.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm">{employee.name}</span>
+                          </div>
+                          <div className="text-xs text-muted-foreground pl-8">
+                            Core Hours: {employee.coreHours ?? "-"} | Non-Core Hours:{" "}
+                            {employee.nonCoreHours?.total ?? "-"} | Training Hours:{" "}
+                            {employee.nonCoreHours?.trainingHours ?? "-"}
+                          </div>
                         </div>
                       ))}
                     </div>
