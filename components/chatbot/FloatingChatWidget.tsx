@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MessageSquare } from "lucide-react";
-
+import { Bot } from "lucide-react";
 type Message = {
     id: number;
     from: "user" | "bot";
@@ -13,6 +13,7 @@ export default function Chatbot() {
     const [input, setInput] = useState("");
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const sessionIdRef = useRef<string>(crypto.randomUUID());
+    const [loading, setLoading] = useState(false);
 
     // Scroll to bottom on new message
     useEffect(() => {
@@ -31,6 +32,7 @@ export default function Chatbot() {
         setMessages((msgs) => [...msgs, userMessage]);
         const messageText = input.trim();
         setInput("");
+        setLoading(true); // Start loading
 
         try {
             const response = await fetch("http://localhost:3001/chatbot", {
@@ -40,13 +42,11 @@ export default function Chatbot() {
                 },
                 body: JSON.stringify({
                     message: messageText,
-                    sessionId: sessionIdRef.current, // 👈 include session ID
+                    sessionId: sessionIdRef.current,
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error("API request failed");
-            }
+            if (!response.ok) throw new Error("API request failed");
 
             const data = await response.json();
             const botMessage: Message = {
@@ -66,6 +66,8 @@ export default function Chatbot() {
                     text: "Oops! Something went wrong. Please try again later.",
                 },
             ]);
+        } finally {
+            setLoading(false); // Stop loading
         }
     };
 
@@ -75,17 +77,18 @@ export default function Chatbot() {
             <button
                 onClick={() => setOpen(!open)}
                 aria-label="Open Chat"
-                className="fixed bottom-6 right-6 z-50 bg-[#1428a0] hover:bg-[#0f1f7c] text-white p-4 rounded-full shadow-lg transition"
+                className="fixed bottom-6 right-6 z-50 bg-[#1428a0] hover:bg-[#0f1f7c] text-white p-4 rounded-full shadow-lg transition floating-btn"
             >
-                <MessageSquare size={24} />
+                <Bot size={24} />
             </button>
+
 
             {/* Chat Popup */}
             {open && (
                 <div className="fixed bottom-20 right-6 z-50 w-80 h-[400px] bg-white rounded-lg shadow-lg flex flex-col overflow-hidden">
                     {/* Header */}
                     <div className="bg-[#1428a0] text-white p-4 font-semibold flex justify-between items-center">
-                        <div>Chatbot</div>
+                        <div>Agent Catalyst</div>
                         <button
                             onClick={() => setOpen(false)}
                             aria-label="Close Chat"
@@ -116,6 +119,18 @@ export default function Chatbot() {
                                 </div>
                             </div>
                         ))}
+                        {loading && (
+                            <div className="flex justify-start">
+                                <div className="bg-white border border-gray-300 text-gray-800 p-2 rounded-md max-w-[70%]">
+                                    <div className="flex space-x-1">
+                                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:0s]"></span>
+                                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                        <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div ref={messagesEndRef} />
                     </div>
 
