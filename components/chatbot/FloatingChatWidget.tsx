@@ -12,6 +12,7 @@ export default function Chatbot() {
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+    const sessionIdRef = useRef<string>(crypto.randomUUID());
 
     // Scroll to bottom on new message
     useEffect(() => {
@@ -32,12 +33,15 @@ export default function Chatbot() {
         setInput("");
 
         try {
-            const response = await fetch("http://localhost:4000/chatbot", {
+            const response = await fetch("http://localhost:3001/chatbot", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ message: messageText }),
+                body: JSON.stringify({
+                    message: messageText,
+                    sessionId: sessionIdRef.current, // 👈 include session ID
+                }),
             });
 
             if (!response.ok) {
@@ -45,7 +49,6 @@ export default function Chatbot() {
             }
 
             const data = await response.json();
-            console.log(data);
             const botMessage: Message = {
                 id: Date.now() + 1,
                 from: "bot",
@@ -100,9 +103,7 @@ export default function Chatbot() {
                         {messages.map((msg) => (
                             <div
                                 key={msg.id}
-                                className={`flex ${
-                                    msg.from === "user" ? "justify-end" : "justify-start"
-                                }`}
+                                className={`flex ${msg.from === "user" ? "justify-end" : "justify-start"}`}
                             >
                                 <div
                                     className={`p-2 rounded-md max-w-[70%] break-words ${
@@ -111,7 +112,7 @@ export default function Chatbot() {
                                             : "bg-white border border-gray-300 text-gray-800"
                                     }`}
                                 >
-                                    {msg.text}
+                                    <div dangerouslySetInnerHTML={{ __html: msg.text }} />
                                 </div>
                             </div>
                         ))}
